@@ -81,7 +81,7 @@ app.post('/login', async (req, res) => {
 
         const token = jwt.sign(
             { email: user.email }, 
-            'secretKey', 
+            process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
 
@@ -214,7 +214,7 @@ app.post('/refresh-token', async (req, res) => {
         // new token
         const token = jwt.sign(
             { email: user.email },
-            'secretKey',
+            process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
 
