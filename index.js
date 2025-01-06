@@ -103,15 +103,10 @@ app.post('/login', async (req, res) => {
 
 // Fetch all users
 const authenticateToken = async (req, res, next) => {
-    console.log('Incoming request headers:', req.headers);
     const authHeader = req.headers['authorization'];
-    console.log('Auth header received:', authHeader);
-    
     const token = authHeader && authHeader.split(' ')[1];
-    console.log('Extracted token:', token);
 
     if (!token) {
-        console.log('No token provided');
         return res.status(401).json({
             success: false,
             message: 'Access token is required',
@@ -120,13 +115,10 @@ const authenticateToken = async (req, res, next) => {
     }
 
     try {
-        console.log('Attempting to verify token...');
-        const decoded = jwt.verify(token, 'secretKey');
-        console.log('Token verified successfully:', decoded);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         next();
     } catch (err) {
-        console.log('Token verification failed:', err.message);
         return res.status(403).json({
             success: false,
             message: 'Invalid or expired token',
@@ -134,7 +126,6 @@ const authenticateToken = async (req, res, next) => {
         });
     }
 };
-
 app.get('/users', authenticateToken, async (req, res) => {
     console.log('Reached /users route handler');
     try {
@@ -143,7 +134,6 @@ app.get('/users', authenticateToken, async (req, res) => {
 
         usersSnapshot.forEach(doc => {
             const userData = doc.data();
-            // Exclude sensitive information like passwords
             const { password, ...userInfo } = userData;
             users.push(userInfo);
         });
