@@ -1,130 +1,119 @@
-# Authentication Service
+# Authentication UIKit
 
-A robust authentication service built with Express.js and Firebase, providing secure user authentication and management capabilities.
+A modern iOS authentication application built with UIKit, showcasing clean architecture and best practices in iOS development. This project includes both the iOS client and a custom-built Node.js/Express authentication service ([Authentication Service Repository](https://github.com/elifbilgep/BasicNodeJsAndExpressAuthService)) to provide a complete end-to-end authentication solution.
 
 ## Features
 
-- User registration with email and username
-- Secure login with JWT authentication
-- Password hashing using bcrypt
-- Token-based authentication middleware
-- User profile management
-- Token refresh functionality
-- Protected routes for authenticated users
-- Comprehensive error handling
-- Request logging middleware
+- Complete authentication system with custom Node.js/Express backend
+- User Registration and Login
+- Profile Management
+- Users List View
+- Token-based Authentication
+- Auto Token Refresh
+- Secure API Communication
+- Responsive UI with UICollectionView
+- Tab Bar Navigation
 
-## Prerequisites
+## Architecture
 
-Before running this project, make sure you have:
+The project follows the MVVM (Model-View-ViewModel) architecture pattern with the following components:
 
-- Node.js (v12 or higher)
-- Firebase account and project setup
-- MongoDB (if using mongoose)
-- Environment variables properly configured
+### Core Components
 
-## Installation
+- **Views**: Custom UIKit views with programmatic auto-layout
+- **ViewControllers**: Managing view lifecycle and user interactions
+- **ViewModels**: Business logic and data transformation
+- **Services**: Network and authentication handling
 
-1. Clone the repository:
-```bash
-git clone [your-repository-url]
-cd [your-project-name]
-```
+### Key Services
 
-2. Install dependencies:
-```bash
-npm install
-```
+- `AuthService`: Handles all authentication-related API calls
+- `NetworkService`: Generic network layer with token refresh mechanism
+- `AppManager`: Manages application state and authentication
+- `UserDefaultsManager`: Handles local data persistence
 
-3. Set up your environment variables in a `.env` file:
-```env
-PORT=3000
-JWT_SECRET=your_jwt_secret_key
-```
+## Technical Stack
 
-4. Configure Firebase:
-- Download your Firebase service account key (serviceAccountKey.json)
-- Place it in the project root directory
-- Update the databaseURL in the Firebase configuration
+- Language: Swift
+- UI Framework: UIKit
+- Networking: Alamofire
+- Asynchronous Programming: Combine, async/await
+- Data Persistence: UserDefaults
+- Layout: Programmatic Auto Layout
+- Pattern: MVVM
 
 ## Project Structure
 
 ```
-├── server.js           # Main application file
-├── firebase.js         # Firebase configuration
-├── models/
-│   └── User.js        # Mongoose user model
-├── .env               # Environment variables
-└── serviceAccountKey.json
+AuthenticationUIKit/
+├── Views/
+│   ├── HomeView
+│   ├── ProfileView
+│   ├── SignInView
+│   └── SignUpView
+├── ViewControllers/
+│   ├── HomeViewController
+│   ├── ProfileViewController
+│   ├── SignInViewController
+│   └── SignUpViewController
+├── ViewModels/
+│   ├── HomeViewModel
+│   ├── ProfileViewModel
+│   └── SignUpViewModel
+└── Services/
+    ├── AuthService
+    └── NetworkService
 ```
 
-## API Endpoints
+## Requirements
 
-### Authentication
+- iOS 15.0+
+- Xcode 14.0+
+- Swift 5.5+
 
-#### POST /register
-- Register a new user
-- Required fields: email, userName, password
-- Returns: JWT token, user info
+## Setup
 
-#### POST /login
-- Authenticate user
-- Required fields: email, password
-- Returns: JWT token, user info
+1. Clone the repository
+2. Install dependencies (if using CocoaPods or Swift Package Manager)
+3. Open `AuthenticationUIKit.xcodeproj`
+4. Build and run the project
 
-### User Management
+## Backend API
 
-#### GET /users
-- Get all users (protected route)
-- Requires: Authorization header with JWT token
-- Returns: List of users (excluding passwords)
+The application communicates with a REST API running on `http://localhost:3000` with the following endpoints:
 
-#### GET /user
-- Get current user profile (protected route)
-- Requires: Authorization header with JWT token
-- Returns: User information
+- `/register` - User registration
+- `/login` - User authentication
+- `/refresh-token` - Token refresh
+- `/logout` - User logout
+- `/users` - Fetch all users
+- `/user` - Fetch current user
 
-#### POST /refresh-token
-- Refresh JWT token
-- Required fields: email
-- Returns: New JWT token
+## Authentication Flow
 
-## Security Features
-
-- Password hashing using bcrypt
-- JWT for secure authentication
-- Protected routes using middleware
-- Sensitive data exclusion
-- Request logging
-- Comprehensive error handling
+1. User registers/logs in
+2. Server returns authentication token
+3. Token is stored securely
+4. Subsequent requests include token
+5. Auto-refresh mechanism handles expired tokens
+6. Logout clears stored tokens
 
 ## Error Handling
 
-The API implements comprehensive error handling:
-- Input validation
-- Authentication errors
+The application includes comprehensive error handling for:
+
+- Network errors
+- Authentication failures
+- Token refresh failures
+- Invalid data
 - Server errors
-- Not found errors
 
-## Running the Application
+## Future Improvements
 
-Start the server:
-```bash
-npm start
-```
-
-The server will start on port 3000 (or the port specified in your environment variables).
-
-## Development
-
-To run in development mode with automatic restart:
-```bash
-npm run dev
-```
-
-## Environment Variables
-
-Required environment variables:
-- `PORT`: Server port (default: 3000)
-- `JWT_SECRET`: Secret key for JWT tokens
-- Firebase configuration (via serviceAccountKey.json)
+- Implement biometric authentication
+- Add unit and UI tests
+- Enhance error handling
+- Add offline support
+- Implement push notifications
+- Add user search functionality
+- Enhance profile management features
